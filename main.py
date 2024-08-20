@@ -54,16 +54,16 @@ for file in files:
     moneda, monto = monto.split(" $")
 
     result.append({
-        "nombre_cliente": nombre,
-        "operacion_concepto": "RESCATE",
+        "fondo": nombre,
+        "monto": monto, 
         "moneda": moneda,
+        "tipo": "VENTA",
+        "concepto": "RESCATE",
         "fecha_operacion": fecha, 
         "fecha_liquidacion": datetime.today().strftime("%d/%m/%Y"),
-        "monto_operacion": monto, 
-        "nemotecnico": "CFMPRULCLP",
         "cantidad": numero_cuota, 
         "precio": valor_cuota, 
-        "forma_pago": forma_pago, 
+        "nemotecnico": "CFMPRULCLP",
     })
 
 df = pd.DataFrame(result)
