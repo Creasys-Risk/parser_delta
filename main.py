@@ -1,6 +1,6 @@
 # %%
 import os
-from datetime import datetime
+from datetime import datetime, date
 import pandas as pd
 from PyPDF2 import PdfReader
 
@@ -55,14 +55,14 @@ for file in files:
 
     result.append({
         "fondo": nombre,
-        "monto": monto, 
+        "monto": int(monto.replace('.', '')), 
         "moneda": moneda,
         "tipo": "VENTA",
         "concepto": "RESCATE",
-        "fecha_operacion": fecha, 
-        "fecha_liquidacion": datetime.today().strftime("%d/%m/%Y"),
-        "cantidad": numero_cuota, 
-        "precio": valor_cuota, 
+        "fecha_operacion": datetime.strptime(fecha, "%d/%m/%Y").date(), 
+        "fecha_liquidacion": date.today(),
+        "cantidad": float(numero_cuota.replace('.', '').replace(',', '.')), 
+        "precio": float(valor_cuota.replace('.', '').replace(',', '.')), 
         "nemotecnico": "CFMPRULCLP",
     })
 
