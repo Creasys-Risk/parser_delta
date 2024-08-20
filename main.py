@@ -51,15 +51,19 @@ for file in files:
     _, data = data.split("Nombre o Razón Social :")
     nombre, _ = data.split("\n", maxsplit=1)
 
-    monto = monto.replace("CLP $", "")
+    moneda, monto = monto.split(" $")
 
     result.append({
-        "fecha": fecha, 
-        "numero_cuota": numero_cuota, 
-        "valor_cuota": valor_cuota, 
-        "monto": monto, 
+        "nombre_cliente": nombre,
+        "operacion_concepto": "RESCATE",
+        "moneda": moneda,
+        "fecha_operacion": fecha, 
+        "fecha_liquidacion": datetime.today().strftime("%d/%m/%Y"),
+        "monto_operacion": monto, 
+        "nemotecnico": "CFMPRULCLP",
+        "cantidad": numero_cuota, 
+        "precio": valor_cuota, 
         "forma_pago": forma_pago, 
-        "nombre": nombre
     })
 
 df = pd.DataFrame(result)
