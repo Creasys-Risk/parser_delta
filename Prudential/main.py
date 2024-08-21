@@ -5,16 +5,14 @@ import pandas as pd
 from PyPDF2 import PdfReader
 
 process_date = datetime.today().strftime("%Y%m%d")
+folder = f"{os.getcwd()}/{process_date}/"
+files = [f for f in os.listdir(folder) if '.pdf' in f]
 
 pass_dict = dict()
-with open(f"{process_date}/pass.txt", 'r') as pass_file:
+with open(f"{folder}pass.txt", 'r') as pass_file:
     for line in pass_file:
         key, value = line.split(":")
         pass_dict[key] = value.replace("\n", "")
-# %%
-folder = os.getcwd()+"/"+process_date+"/"
-
-files = [f for f in os.listdir(folder) if '.pdf' in f]
 # %%
 result = []
 
