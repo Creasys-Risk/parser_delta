@@ -2,3 +2,4 @@
 *.pdf
 pass.txt
 OPER*.txt
+__pycache__/
