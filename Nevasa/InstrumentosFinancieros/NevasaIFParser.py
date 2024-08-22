@@ -12,7 +12,6 @@ def nevasa_if_parser(process_date: str, main_folder: str):
         result = []
 
         for file in files: 
-            output_file = file.replace('.pdf', '.txt')
             reader = PdfReader(folder+file)
 
             text = ''
@@ -20,9 +19,6 @@ def nevasa_if_parser(process_date: str, main_folder: str):
             for page_num in range(len(reader.pages)):
                 page = reader.pages[page_num]
                 text += page.extract_text()
-
-            with open(folder+output_file, 'w', encoding='utf-8') as txt_file:
-                txt_file.write(text)
 
             _, data = text.split('AGENTE: ')
             aux, data = data.split('\n', maxsplit=1)

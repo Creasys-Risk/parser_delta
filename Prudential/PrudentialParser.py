@@ -19,7 +19,6 @@ def prudential_parser(process_date: str, main_folder: str):
         result = []
 
         for file in files:
-            output_file = file.replace('.pdf', '.txt')
             _, _, pass_key, _ = file.split('_')
             reader = PdfReader(folder+file)
             reader.decrypt(pass_dict[pass_key])
@@ -29,9 +28,6 @@ def prudential_parser(process_date: str, main_folder: str):
             for page_num in range(len(reader.pages)):
                 page = reader.pages[page_num]
                 text += page.extract_text()
-
-            with open(folder+output_file, 'w') as txt_file:
-                txt_file.write(text)
 
             _, data = text.split("Fecha  ")
             fecha, data = data.split(",", maxsplit=1)
