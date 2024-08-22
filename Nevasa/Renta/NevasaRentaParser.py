@@ -36,7 +36,7 @@ def nevasa_renta_parser(process_date: str, main_folder: str):
             data_table = list(data.split(' '))
             documento = data_table[:-4]
             data_table = data_table[len(documento):]
-            documento = '_'.join(documento)
+            documento = documento[0]
             precio, cantidad, compra, venta = data_table
 
             result.append({
@@ -56,7 +56,8 @@ def nevasa_renta_parser(process_date: str, main_folder: str):
         print(f"Error en Parser de Rentas Nevasa: {err}")
 
 if __name__ == "__main__":
-    process_date = datetime.today().strftime("%Y%m%d")
+    # process_date = datetime.today().strftime("%Y%m%d")
+    process_date = '20240821'
     main_folder = os.getcwd()
 
     nevasa_renta_parser(process_date, main_folder)
