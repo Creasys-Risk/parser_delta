@@ -31,14 +31,19 @@ def nevasa_renta_parser(process_date: str, main_folder: str):
             _, data = data.split('\n', maxsplit=1)
             fecha_pago, data = data.split('\n', maxsplit=1)
             _, data = data.split('\n', maxsplit=1)
-            data, _ = data.split('\n', maxsplit=1)
+            data_table, data = data.split('\n', maxsplit=1)
+            _, data = data.split('SALDO A FAVOR (EN CONTRA)')
+            _, comision, _ = data.split('\n', maxsplit=2)
 
-            data_table = list(data.split(' '))
+            data_table = list(data_table.split(' '))
             documento = data_table[:-4]
             data_table = data_table[len(documento):]
             tipo_renta = 'FIJA' if len(documento) == 1 else 'VARIABLE'
             documento = documento[0]
             precio, cantidad, compra, venta = data_table
+            compra = int(compra.replace('.', ''))
+            venta = int(venta.replace('.', ''))
+            monto = compra + venta
 
             result.append({
                 "tipo_renta": tipo_renta,
@@ -47,8 +52,9 @@ def nevasa_renta_parser(process_date: str, main_folder: str):
                 "nemotecnico": documento,
                 "precio": float(precio.replace('.', '').replace(',', '.')),
                 "cantidad": int(cantidad.replace('.', '')),
-                "compra": int(compra.replace('.', '')),
-                "venta": int(venta.replace('.', '')),
+                "monto": monto,
+                "tipo_instrumento": "COMPRA" if compra != 0 else "VENTA",
+                "comision": int(comision.replace('.', ''))
             })
 
         df = pd.DataFrame(result)
