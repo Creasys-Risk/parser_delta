@@ -1,5 +1,5 @@
 .venv
 *.pdf
-pass.txt
-OPER*.txt
+*.txt
+!requirements.txt
 __pycache__/
