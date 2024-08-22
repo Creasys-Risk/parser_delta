@@ -49,13 +49,13 @@ def nevasa_if_parser(process_date: str, main_folder: str):
             valor_final = int(table[7].replace('.', ''))
 
             result.append({
-                "fecha": fecha,
+                "fecha_movimiento": fecha,
                 "tipo_instrumento": compra_venta,
                 "nemotecnico": instrumento,
-                "valor_nominal": valor_nominal,
+                "cantidad": valor_nominal,
                 "moneda_nominal": moneda_nominal,
                 "precio": precio,
-                "valor_final": valor_final,
+                "monto": valor_final,
             })
 
         df = pd.DataFrame(result)

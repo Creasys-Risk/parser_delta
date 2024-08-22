@@ -43,8 +43,8 @@ def nevasa_renta_parser(process_date: str, main_folder: str):
             result.append({
                 "tipo_renta": tipo_renta,
                 "liquidacion": liquidacion,
-                "fecha_pago": datetime.strptime(fecha_pago, "%d/%m/%Y").date(),
-                "documento": documento,
+                "fecha": datetime.strptime(fecha_pago, "%d/%m/%Y").date(),
+                "nemotecnico": documento,
                 "precio": float(precio.replace('.', '').replace(',', '.')),
                 "cantidad": int(cantidad.replace('.', '')),
                 "compra": int(compra.replace('.', '')),

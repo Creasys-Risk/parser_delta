@@ -36,10 +36,10 @@ def nevasa_compra_simultanea_parser(process_date: str, main_folder: str):
             fecha_movimiento, fecha_vencimiento, data = data.split('\n', maxsplit=2)
 
             result.append({
-                'instrumento': instrumento,
-                'monto_contado': int(monto_contado.replace('.', '')),
-                'monto_compromiso': int(monto_compromiso.replace('.', '')),
-                'diferencia_precio': float(diferencia_precio.replace('%', '').replace('.', '').replace(',', '.')),
+                'nemotecnico': instrumento,
+                'monto': int(monto_contado.replace('.', '')),
+                'cantidad': int(monto_compromiso.replace('.', '')),
+                'precio': float(diferencia_precio.replace('%', '').replace('.', '').replace(',', '.')),
                 'fecha_movimiento': datetime.strptime(fecha_movimiento, "%d/%m/%Y").date(),
                 'fecha_vencimiento': datetime.strptime(fecha_vencimiento, "%d/%m/%Y").date(),
             })
