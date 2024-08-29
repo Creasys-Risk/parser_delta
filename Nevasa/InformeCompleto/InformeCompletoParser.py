@@ -104,8 +104,9 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             line = line.replace("Liquidacion Venta TP ", "")
                             row = line.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
-                            nemotecnico = row[2]
-                            monto = int(row[5].replace(".", ""))
+                            nemotecnico = row[2:-5]
+                            nemotecnico = " ".join(nemotecnico)
+                            monto = int(row[-3].replace(".", ""))
 
                             result.append({
                                 "nombre_fondo": fondo,
@@ -127,13 +128,15 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             tipo = row[2].upper()
                             nemotecnico = row[4]
-                            monto = int(row[7].replace(".", ""))
+                            precio = float(row[6].replace(".", "").replace(",", "."))
+                            cantidad = float(row[5].replace(".", "").replace(",", "."))
+                            monto = float(row[7].replace(".", "").replace(",", "."))
                             result.append({
                                 "nombre_fondo": fondo,
                                 "fecha_pago":fecha,
                                 "fecha_ingreso":fecha,
-                                "precio":0,
-                                "cantidad":monto,
+                                "precio":precio,
+                                "cantidad":cantidad,
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
@@ -146,13 +149,15 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             tipo = row[2].upper()
                             nemotecnico = row[4]
-                            monto = int(row[7].replace(".", ""))
+                            precio = float(row[6].replace(".", "").replace(",", "."))
+                            cantidad = float(row[5].replace(".", "").replace(",", "."))
+                            monto = float(row[7].replace(".", "").replace(",", "."))
                             result.append({
                                 "nombre_fondo": fondo,
                                 "fecha_pago":fecha,
                                 "fecha_ingreso":fecha,
-                                "precio":0,
-                                "cantidad":monto,
+                                "precio":precio,
+                                "cantidad":cantidad,
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
@@ -200,6 +205,22 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             })
 
         df = pd.DataFrame(result)
+        df_variable = df[df['tipo_operacion'] == 'RENTA VARIABLE']
+        df_reminder = df[df['tipo_operacion'] != 'RENTA VARIABLE']
+        agg_functions = {
+            'nombre_fondo': 'first',
+            'fecha_pago': 'first',
+            'fecha_ingreso': 'first',
+            'precio': 'first',
+            'cantidad': 'sum', 
+            'monto': 'sum',
+            'comision': 'first',
+            'nemotecnico': 'first',
+            'compra/venta/vencimiento': 'first',
+            'tipo_operacion': 'first'
+        }
+        df_variable = df_variable.groupby(["nemotecnico", "precio", "compra/venta/vencimiento"]).aggregate(agg_functions)
+        df = pd.concat([df_reminder, df_variable])
 
         df.to_excel(f"{folder}{process_date}_informe_completo_results.xlsx", index=False, engine="openpyxl")
         
