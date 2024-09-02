@@ -122,10 +122,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "tipo_operacion": "VENCIMIENTO"
                             })
                         # Renta Fija
-                        elif "Compra RF" in line or "Venta RF" in line:
-                            row = line.replace("Retrov ", "")
-                            row = row.replace("Nominal ", "")
-                            row = row.split(" ")
+                        elif ("Compra RF" in line or "Venta RF" in line) and "Retrov Nominal" not in line:
+                            row = line.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             tipo = row[2].upper()
                             nemotecnico = row[4]
@@ -191,13 +189,15 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             row = row.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             nemotecnico = row[2]
+                            cantidad = int(row[3].replace(".", ""))
+                            precio = float(row[4].replace(".", "").replace(",", "."))
                             monto = int(row[5].replace(".", ""))
                             result.append({
                                 "nombre_fondo": fondo,
                                 "fecha_pago":fecha,
                                 "fecha_ingreso":fecha,
                                 "precio":0,
-                                "cantidad":monto,
+                                "cantidad":cantidad*precio,
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
