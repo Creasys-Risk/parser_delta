@@ -37,10 +37,11 @@ def informe_completo_parser(process_date: str, main_folder: str):
                     if process_date_simultaneas in value:
                         row_1 = value.split(" ")
                         row_2 = lines[index+1].split(" ")
-                        nemotecnico = row_1[0]
-                        precio = float(row_1[3].replace(",", "."))
-                        fecha_ingreso = datetime.strptime(row_1[6], "%d-%m-%Y").date()
-                        cantidad = int(row_1[8].replace(".", ""))
+                        nemotecnico = row_1[0:-9]
+                        nemotecnico = " ".join(nemotecnico)
+                        precio = float(row_1[-7].replace(",", "."))
+                        fecha_ingreso = datetime.strptime(row_1[-4], "%d-%m-%Y").date()
+                        cantidad = int(row_1[-2].replace(".", ""))
                         fecha_pago = datetime.strptime(row_2[2], "%d-%m-%Y").date()
                         monto = int(row_2[4].replace("%", "").replace(".", ""))
                         result.append({
