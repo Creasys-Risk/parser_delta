@@ -57,37 +57,38 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             "tipo_operacion": "SIMULTANEA"
                         })
             
-            _, data = data.split("Detalle Operaciones Vigentes Pactos\n")
-            row_1, data = data.split("\n", maxsplit=1)
-            _, data = data.split("\n", maxsplit=1)
-            row_2, data = data.split("\n", maxsplit=1)
-            row_1 = row_1.split(" ")
-            row_2 = row_2.split(" ")
-            plazo = int(row_1[4])
-            precio = float(row_1[5].replace(",", "."))
-            fecha_ingreso = datetime.strptime(row_1[8], "%d/%m/%Y").date()
-            monto = int(row_1[9].replace(".", ""))
-            fecha_venta_plazo = datetime.strptime(row_2[2], "%d/%m/%Y").date()
-            cantidad = int(row_2[3].replace(".", ""))
+            if "Detalle Operaciones Vigentes Pactos" in data:
+                _, data = data.split("Detalle Operaciones Vigentes Pactos\n")
+                row_1, data = data.split("\n", maxsplit=1)
+                _, data = data.split("\n", maxsplit=1)
+                row_2, data = data.split("\n", maxsplit=1)
+                row_1 = row_1.split(" ")
+                row_2 = row_2.split(" ")
+                plazo = int(row_1[4])
+                precio = float(row_1[5].replace(",", "."))
+                fecha_ingreso = datetime.strptime(row_1[8], "%d/%m/%Y").date()
+                monto = int(row_1[9].replace(".", ""))
+                fecha_venta_plazo = datetime.strptime(row_2[2], "%d/%m/%Y").date()
+                cantidad = int(row_2[3].replace(".", ""))
 
-            if fecha_ingreso + timedelta(days=plazo) != fecha_venta_plazo:
-                print(f"Fecha de compra más plazo no calzan con la Fecha de venta suministrada por el archivo.")
-                print(f"Fecha de compra: {fecha_ingreso}")
-                print(f"Plazo: {plazo}")
-                print(f"Fecha de venta: {fecha_venta_plazo}")
-            
-            result.append({
-                "nombre_fondo": fondo,
-                "fecha_pago":fecha_ingreso + timedelta(days=plazo),
-                "fecha_ingreso":fecha_ingreso,
-                "precio":precio,
-                "cantidad":cantidad,
-                "monto":monto,
-                "comision": 0,
-                "nemotecnico":"PACTO",
-                "compra/venta/vencimiento": "COMPRA",
-                "tipo_operacion": "PACTO"
-            })
+                if fecha_ingreso + timedelta(days=plazo) != fecha_venta_plazo:
+                    print(f"Fecha de compra más plazo no calzan con la Fecha de venta suministrada por el archivo.")
+                    print(f"Fecha de compra: {fecha_ingreso}")
+                    print(f"Plazo: {plazo}")
+                    print(f"Fecha de venta: {fecha_venta_plazo}")
+                
+                result.append({
+                    "nombre_fondo": fondo,
+                    "fecha_pago":fecha_ingreso + timedelta(days=plazo),
+                    "fecha_ingreso":fecha_ingreso,
+                    "precio":precio,
+                    "cantidad":cantidad,
+                    "monto":monto,
+                    "comision": 0,
+                    "nemotecnico":"PACTO",
+                    "compra/venta/vencimiento": "COMPRA",
+                    "tipo_operacion": "PACTO"
+                })
 
             while "Movimientos de Títulos" in data:
                 _, data = data.split("Movimientos de Títulos ", maxsplit=1)
@@ -222,7 +223,10 @@ def informe_completo_parser(process_date: str, main_folder: str):
             'tipo_operacion': 'first'
         }
         df_variable = df_variable.groupby(["nemotecnico", "precio", "compra/venta/vencimiento"]).aggregate(agg_functions)
-        df = pd.concat([df_reminder, df_variable])
+        if len(df_variable) != 0:
+            df = pd.concat([df_reminder, df_variable])
+        else:
+            df = df_reminder
 
         df.to_excel(f"{folder}{process_date}_informe_completo_results.xlsx", index=False, engine="openpyxl")
         
