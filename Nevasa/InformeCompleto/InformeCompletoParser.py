@@ -188,10 +188,11 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             row = line.replace("N.Credito Retiro TP ", "")
                             row = row.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
-                            nemotecnico = row[2]
-                            cantidad = int(row[3].replace(".", ""))
-                            precio = float(row[4].replace(".", "").replace(",", "."))
-                            monto = int(row[5].replace(".", ""))
+                            nemotecnico = row[2:-7]
+                            nemotecnico = " ".join(nemotecnico)
+                            cantidad = int(row[-6].replace(".", ""))
+                            precio = float(row[-5].replace(".", "").replace(",", "."))
+                            monto = int(row[-4].replace(".", ""))
                             result.append({
                                 "nombre_fondo": fondo,
                                 "fecha_pago":fecha,
@@ -229,7 +230,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
         raise Exception(f"Error en Parser de Informe Completo: {err}")
 
 if __name__ == "__main__":
-    process_date = datetime.today().strftime("%Y%m%d")
+    # process_date = datetime.today().strftime("%Y%m%d")
+    process_date = "20240903"
     main_folder = os.getcwd()
 
     informe_completo_parser(process_date, main_folder)
