@@ -41,9 +41,9 @@ def informe_completo_parser(process_date: str, main_folder: str):
                         nemotecnico = " ".join(nemotecnico)
                         precio = float(row_1[-7].replace(",", "."))
                         fecha_ingreso = datetime.strptime(row_1[-4], "%d-%m-%Y").date()
-                        cantidad = int(row_1[-2].replace(".", ""))
+                        cantidad = int(row_2[4].replace("%", "").replace(".", ""))
                         fecha_pago = datetime.strptime(row_2[2], "%d-%m-%Y").date()
-                        monto = int(row_2[4].replace("%", "").replace(".", ""))
+                        monto = int(row_1[-2].replace(".", ""))
                         result.append({
                             "nombre_fondo": fondo,
                             "fecha_pago":fecha_pago,
