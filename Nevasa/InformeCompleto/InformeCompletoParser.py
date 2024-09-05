@@ -122,6 +122,36 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "compra/venta/vencimiento": "VCTO",
                                 "tipo_operacion": "VENCIMIENTO"
                             })
+                        # Instrumentos Financieros
+                        elif "FR Custodia" in line:
+                            row = line.replace("FR Custodia ", "")
+                            row = row.split(" ")
+                            if "PAGARE" in row:
+                                fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
+                                tipo = row[2].upper()
+                                nemotecnico = f"{row[4]} {row[-3]}"
+                                cantidad = float(row[6].replace(".", "").replace(",", "."))
+                                precio = float(row[7].replace(".", "").replace(",", "."))
+                                monto = int(row[8].replace(".", ""))
+                            else:
+                                fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
+                                tipo = row[2].upper()
+                                nemotecnico = row[4]
+                                monto = int(row[7].replace(".", ""))
+                                cantidad = monto
+                                precio = 0
+                            result.append({
+                                "nombre_fondo": fondo,
+                                "fecha_pago":fecha,
+                                "fecha_ingreso":fecha,
+                                "precio":precio,
+                                "cantidad":cantidad,
+                                "monto":monto,
+                                "comision": 0,
+                                "nemotecnico":nemotecnico,
+                                "compra/venta/vencimiento": tipo,
+                                "tipo_operacion": "INSTRUMENTO FINANCIERO"
+                            })
                         # Renta Fija
                         elif ("Compra RF" in line or "Venta RF" in line) and "Retrov Nominal" not in line:
                             row = line.split(" ")
@@ -163,26 +193,6 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "nemotecnico":nemotecnico,
                                 "compra/venta/vencimiento": tipo,
                                 "tipo_operacion": "RENTA VARIABLE"
-                            })
-                        # Instrumentos Financieros
-                        elif "FR Custodia" in line:
-                            row = line.replace("FR Custodia ", "")
-                            row = row.split(" ")
-                            fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
-                            tipo = row[2].upper()
-                            nemotecnico = row[4]
-                            monto = int(row[7].replace(".", ""))
-                            result.append({
-                                "nombre_fondo": fondo,
-                                "fecha_pago":fecha,
-                                "fecha_ingreso":fecha,
-                                "precio":0,
-                                "cantidad":monto,
-                                "monto":monto,
-                                "comision": 0,
-                                "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": tipo,
-                                "tipo_operacion": "INSTRUMENTO FINANCIERO"
                             })
                         # Venta Simultanea
                         elif "N.Credito Retiro TP" in line:
@@ -234,7 +244,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
         raise Exception(f"Error en Parser de Informe Completo: {err}")
 
 if __name__ == "__main__":
-    process_date = datetime.today().strftime("%Y%m%d")
+    # process_date = datetime.today().strftime("%Y%m%d")
+    process_date = "20240904"
     main_folder = os.getcwd()
 
     informe_completo_parser(process_date, main_folder)
