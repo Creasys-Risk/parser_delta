@@ -138,7 +138,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 tipo = row[2].upper()
                                 nemotecnico = row[4]
                                 monto = int(row[7].replace(".", ""))
-                                cantidad = monto
+                                cantidad = float(row[5].replace(".", "").replace(",", "."))
                                 precio = 0
                             result.append({
                                 "nombre_fondo": fondo,
