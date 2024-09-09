@@ -73,3 +73,4 @@ if __name__ == "__main__":
     main_folder = os.getcwd()
 
     prudential_parser(process_date, main_folder)
+# %%
