@@ -174,7 +174,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "tipo_operacion": "RENTA FIJA"
                             })
                         # Renta Variable
-                        elif (("Compra RV" in line or "Venta RV" in line) and "CFIN" in line) or (("Compra IF" in line or "Venta IF" in line) and "Retrov" not in line):
+                        elif (("Compra RV" in line or "Venta RV" in line) and "CFIN" in line) or (("Compra IF" in line or "Venta IF" in line) and "Retrov" not in line and "Retroc" not in line):
                             row = line.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             tipo = row[2].upper()
