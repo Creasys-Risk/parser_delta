@@ -247,8 +247,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
         raise Exception(f"Error en Parser de Informe Completo: {err}")
 
 if __name__ == "__main__":
-    # process_date = datetime.today().strftime("%Y%m%d")
-    process_date = '20241008'
+    process_date = datetime.today().strftime("%Y%m%d")
     main_folder = os.getcwd()
 
     informe_completo_parser(process_date, main_folder)
