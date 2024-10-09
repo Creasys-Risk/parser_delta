@@ -1,6 +1,7 @@
 # %%
 import os
 import pandas as pd
+import numpy as np
 from PyPDF2 import PdfReader
 from datetime import datetime, timedelta
 # %%
@@ -156,6 +157,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
                         elif ("Compra RF" in line or "Venta RF" in line) and "Retrov Nominal" not in line:
                             row = line.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
+                            fecha_pago = np.busday_offset(fecha, 1)
+                            fecha_pago = pd.to_datetime(fecha_pago).date()
                             tipo = row[2].upper()
                             nemotecnico = row[4]
                             precio = float(row[6].replace(".", "").replace(",", "."))
@@ -163,7 +166,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             monto = float(row[7].replace(".", "").replace(",", "."))
                             result.append({
                                 "nombre_fondo": fondo,
-                                "fecha_pago":fecha,
+                                "fecha_pago":fecha_pago,
                                 "fecha_ingreso":fecha,
                                 "precio":precio,
                                 "cantidad":cantidad,
@@ -244,7 +247,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
         raise Exception(f"Error en Parser de Informe Completo: {err}")
 
 if __name__ == "__main__":
-    process_date = datetime.today().strftime("%Y%m%d")
+    # process_date = datetime.today().strftime("%Y%m%d")
+    process_date = '20241008'
     main_folder = os.getcwd()
 
     informe_completo_parser(process_date, main_folder)
