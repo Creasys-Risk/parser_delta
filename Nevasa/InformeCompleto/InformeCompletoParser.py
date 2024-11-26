@@ -45,9 +45,13 @@ def informe_completo_parser(process_date: str, main_folder: str):
                         cantidad = int(row_2[4].replace("%", "").replace(".", ""))
                         fecha_pago = datetime.strptime(row_2[2], "%d-%m-%Y").date()
                         monto = int(row_1[-2].replace(".", ""))
+                        
+                        # Nuevo nemotecnico
+                        nemotecnico = f"SMT_{fecha_pago.strftime('%d%m%Y')}_{fecha_ingreso.strftime('%d%m%Y')}_{precio}_{nemotecnico.replace(' ', '_')}"
+
                         result.append({
                             "nombre_fondo": fondo,
-                            "fecha_pago":fecha_pago,
+                            "fecha_pago":fecha_ingreso,
                             "fecha_ingreso":fecha_ingreso,
                             "precio":precio,
                             "cantidad":cantidad,
