@@ -1,11 +1,10 @@
-from datetime import datetime
+# %%
 import os
 import re
-
-from PyPDF2 import PdfReader
 import pandas as pd
-
-
+from PyPDF2 import PdfReader
+from datetime import datetime
+# %%
 main_folder = os.getcwd()
 process_date = datetime.today().strftime("%Y%m%d")
 
