@@ -81,16 +81,18 @@ def informe_completo_parser(process_date: str, main_folder: str):
                     print(f"Fecha de compra: {fecha_ingreso}")
                     print(f"Plazo: {plazo}")
                     print(f"Fecha de venta: {fecha_venta_plazo}")
-                
+                # Nuevo nemotecnico
+                nemotecnico = f"PACTO_{fecha_venta_plazo.strftime('%d%m%Y')}_{fecha_ingreso.strftime('%d%m%Y')}_{precio}_AHORRO"
+
                 result.append({
                     "nombre_fondo": fondo,
-                    "fecha_pago":fecha_ingreso + timedelta(days=plazo),
+                    "fecha_pago":fecha_ingreso,
                     "fecha_ingreso":fecha_ingreso,
                     "precio":precio,
                     "cantidad":cantidad,
                     "monto":monto,
                     "comision": 0,
-                    "nemotecnico":"PACTO",
+                    "nemotecnico":nemotecnico,
                     "compra/venta/vencimiento": "COMPRA",
                     "tipo_operacion": "PACTO"
                 })
@@ -255,3 +257,4 @@ if __name__ == "__main__":
     main_folder = os.getcwd()
 
     informe_completo_parser(process_date, main_folder)
+# %%
