@@ -6,7 +6,8 @@ from PyPDF2 import PdfReader
 from datetime import datetime
 # %%
 main_folder = os.getcwd()
-process_date = datetime.today().strftime("%Y%m%d")
+process_date_raw = datetime.today().date()
+process_date = process_date_raw.strftime("%Y%m%d")
 
 folder = f"{main_folder}/{process_date}/"
 process_date_simultaneas = datetime.strptime(process_date, "%Y%m%d").strftime("%d-%m-%Y")
@@ -36,7 +37,10 @@ for file in files:
         if not re.search(r"\d", row) or "/" not in row:
             continue
         aux = row.split(" ")
-        fecha = datetime.strptime(aux[0], "%d/%m/%Y")
+        fecha = datetime.strptime(aux[0], "%d/%m/%Y").date()
+
+        if fecha != process_date_raw:
+            continue
 
         for i,d in enumerate(aux[2:]):
             if re.search(r"\d", d):
@@ -58,8 +62,8 @@ for file in files:
 
         results.append({
             "nombre_fondo": "FONDO DE INVERSION NEVASA DEUDA PRIVADA",
-            "fecha_pago":fecha.date(),
-            "fecha_ingreso":fecha.date(),
+            "fecha_pago":fecha,
+            "fecha_ingreso":fecha,
             "precio":precio,
             "cantidad":cantidad,
             "monto":monto,
@@ -69,4 +73,16 @@ for file in files:
         })
 
 df = pd.DataFrame(results)
+agg_functions = {
+    'nombre_fondo': 'first',
+    'fecha_pago': 'first',
+    'fecha_ingreso': 'first',
+    'precio': 'first',
+    'cantidad': 'sum', 
+    'monto': 'sum',
+    'comision': 'first',
+    'nemotecnico': 'first',
+    'compra/venta': 'first'
+}
+df = df.groupby(["nemotecnico", "precio", "compra/venta"]).aggregate(agg_functions)
 df.to_excel(f"{folder}{process_date}_informe_deuda_privada.xlsx", index=False, engine="openpyxl")
