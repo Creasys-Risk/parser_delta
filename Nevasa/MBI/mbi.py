@@ -88,7 +88,7 @@ for file in files:
 
         results.append({
             "nombre_fondo": "FONDO DE INVERSION NEVASA AHORRO",
-            "fecha_pago":fecha_pago,
+            "fecha_pago":fecha_ingreso,
             "fecha_ingreso":fecha_ingreso,
             "precio":precio,
             "cantidad":cantidad,
