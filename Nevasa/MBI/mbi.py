@@ -6,7 +6,7 @@ from PyPDF2 import PdfReader
 import pandas as pd
 # %%
 main_folder = os.getcwd()
-process_date_raw = datetime(2025, 1, 20)
+process_date_raw = datetime.now().date()
 process_date = process_date_raw.strftime("%Y%m%d")
 
 folder = f"{main_folder}/{process_date}/"
@@ -73,14 +73,12 @@ for file in files:
             year_pago = year_pago.replace("+", "")
             fecha_ingreso = data[-3].replace("Plazo", "")
 
-        fecha_pago = datetime(int(year_pago), int(month_pago), int(day_pago))
-        fecha_ingreso = datetime.strptime(fecha_ingreso, "%d-%m-%Y")
+        fecha_pago = datetime(int(year_pago), int(month_pago), int(day_pago)).date()
+        fecha_ingreso = datetime.strptime(fecha_ingreso, "%d-%m-%Y").date()
 
         if fecha_ingreso != process_date_raw:
             continue
 
-        fecha_pago = fecha_pago.date()
-        fecha_ingreso = fecha_ingreso.date()
         precio = float(data[2].replace(".", "").replace(",", "."))
         cantidad = float(data[9].replace("%", "").replace(".", "").replace(",", "."))
         monto = float(data[4].replace(".", "").replace(",", "."))
