@@ -161,6 +161,10 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             })
                         # Renta Fija
                         elif ("Compra RF" in line or "Venta RF" in line) and "Retrov Nominal" not in line:
+                            tipo_operacion = "RENTA FIJA"
+                            if "Retroc Nominal " in line:
+                                line = line.replace("Retroc Nominal ", "")
+                                tipo_operacion = "PACTO"
                             row = line.split(" ")
                             fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
                             fecha_pago = np.busday_offset(fecha, 1)
@@ -180,7 +184,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
                                 "compra/venta/vencimiento": tipo,
-                                "tipo_operacion": "RENTA FIJA"
+                                "tipo_operacion": tipo_operacion
                             })
                         # Renta Variable
                         elif (("Compra RV" in line or "Venta RV" in line) and "CFIN" in line) or (("Compra IF" in line or "Venta IF" in line) and "Retrov" not in line and "Retroc" not in line):
