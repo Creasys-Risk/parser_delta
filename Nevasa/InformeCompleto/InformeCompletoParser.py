@@ -58,7 +58,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                             "monto":monto,
                             "comision": 0,
                             "nemotecnico":nemotecnico,
-                            "compra/venta/vencimiento": "COMPRA",
+                            "compra/venta": "COMPRA",
                             "tipo_operacion": "SIMULTANEA"
                         })
             
@@ -93,7 +93,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                     "monto":monto,
                     "comision": 0,
                     "nemotecnico":nemotecnico,
-                    "compra/venta/vencimiento": "COMPRA",
+                    "compra/venta": "COMPRA",
                     "tipo_operacion": "PACTO"
                 })
 
@@ -108,29 +108,8 @@ def informe_completo_parser(process_date: str, main_folder: str):
 
                 for line in lines:
                     if process_date_renta in line:
-                        # Vencimientos
-                        if "Liquidacion Venta TP" in line:
-                            line = line.replace("Liquidacion Venta TP ", "")
-                            row = line.split(" ")
-                            fecha = datetime.strptime(row[0], "%d/%m/%Y").date()
-                            nemotecnico = row[2:-5]
-                            nemotecnico = " ".join(nemotecnico)
-                            monto = int(row[-3].replace(".", ""))
-
-                            result.append({
-                                "nombre_fondo": fondo,
-                                "fecha_pago":fecha,
-                                "fecha_ingreso":fecha,
-                                "precio":0,
-                                "cantidad":monto,
-                                "monto":monto,
-                                "comision": 0,
-                                "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": "VCTO",
-                                "tipo_operacion": "VENCIMIENTO"
-                            })
                         # Instrumentos Financieros
-                        elif "FR Custodia" in line:
+                        if "FR Custodia" in line:
                             row = line.replace("FR Custodia ", "")
                             row = row.split(" ")
                             if "PAGARE" in row:
@@ -156,7 +135,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": tipo,
+                                "compra/venta": tipo,
                                 "tipo_operacion": "INSTRUMENTO FINANCIERO"
                             })
                         # Renta Fija
@@ -183,7 +162,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": tipo,
+                                "compra/venta": tipo,
                                 "tipo_operacion": tipo_operacion
                             })
                         # Renta Variable
@@ -204,7 +183,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": tipo,
+                                "compra/venta": tipo,
                                 "tipo_operacion": "RENTA VARIABLE"
                             })
                         # Venta Simultanea
@@ -226,7 +205,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                                 "monto":monto,
                                 "comision": 0,
                                 "nemotecnico":nemotecnico,
-                                "compra/venta/vencimiento": "VENTA",
+                                "compra/venta": "VENTA",
                                 "tipo_operacion": "SIMULTANEA"
                             })
 
@@ -242,10 +221,10 @@ def informe_completo_parser(process_date: str, main_folder: str):
             'monto': 'sum',
             'comision': 'first',
             'nemotecnico': 'first',
-            'compra/venta/vencimiento': 'first',
+            'compra/venta': 'first',
             'tipo_operacion': 'first'
         }
-        df_variable = df_variable.groupby(["nemotecnico", "precio", "compra/venta/vencimiento"]).aggregate(agg_functions)
+        df_variable = df_variable.groupby(["nemotecnico", "precio", "compra/venta"]).aggregate(agg_functions)
         if len(df_variable) != 0:
             df = pd.concat([df_reminder, df_variable])
         else:
