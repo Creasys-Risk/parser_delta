@@ -35,7 +35,7 @@ def informe_completo_parser(process_date: str, main_folder: str):
                 lines = table.split('\n')
 
                 for index, value in enumerate(lines):
-                    if process_date_simultaneas in value:
+                    if process_date_simultaneas in value and "Venta" not in value:
                         row_1 = value.split(" ")
                         row_2 = lines[index+1].split(" ")
                         nemotecnico = row_1[0:-9]
