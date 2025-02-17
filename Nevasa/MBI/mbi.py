@@ -23,8 +23,8 @@ for file in files:
         page = reader.pages[page_num]
         text += page.extract_text()
 
-    with open(f"{main_folder}/{filename}.txt", "w", encoding="utf-8") as f:
-        f.write(text)
+    # with open(f"{main_folder}/{filename}.txt", "w", encoding="utf-8") as f:
+    #     f.write(text)
 
     data = text.split("Detalle Operaciones Vigentes Simultáneas")
 
