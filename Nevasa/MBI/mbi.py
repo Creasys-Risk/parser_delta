@@ -86,6 +86,12 @@ for file in files:
         precio_factura = float(data[3].replace(".", "").replace(",", "."))
         nemotecnico = f"SMT_{fecha_pago.strftime('%d%m%Y')}_{fecha_ingreso.strftime('%d%m%Y')}_{precio}_{nemotecnico.replace(' ', '_')}"
 
+        if cantidad == 0:
+            cantidad = monto * 1+(precio/100)
+
+        else:
+            cantidad = cantidad
+            
         results.append({
             "nombre_fondo": "FONDO DE INVERSION NEVASA AHORRO",
             "fecha_pago":fecha_ingreso,
@@ -103,3 +109,4 @@ for file in files:
 
 df = pd.DataFrame(results)
 df.to_excel(f"{folder}{process_date}_informe_operaciones_mbi.xlsx", index=False, engine="openpyxl")
+# %%
